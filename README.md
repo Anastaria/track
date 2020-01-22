@@ -4,10 +4,6 @@
 
 PySOT has enabled research projects, including: [SiamRPN](http://openaccess.thecvf.com/content_cvpr_2018/html/Li_High_Performance_Visual_CVPR_2018_paper.html), [DaSiamRPN](https://arxiv.org/abs/1808.06048), [SiamRPN++](https://arxiv.org/abs/1812.11703), and [SiamMask](https://arxiv.org/abs/1812.05050).
 
-<div align="center">
-  <img src="demo/output/bag_demo.gif" width="800px" />
-  <p>Example SiamFC, SiamRPN and SiamMask outputs.</p>
-</div>
 
 ## Introduction
 
