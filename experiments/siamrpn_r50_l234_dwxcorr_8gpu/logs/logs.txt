@@ -1,0 +1,1161 @@
+[2020-01-20 09:35:25,930-rk0-train.py#271] Version Information: 
+commit : 
+  log  : 
+
+[2020-01-20 09:35:25,931-rk0-train.py#272] config 
+{
+    "META_ARC": "siamrpn_r50_l234_dwxcorr",
+    "CUDA": true,
+    "TRAIN": {
+        "THR_HIGH": 0.6,
+        "THR_LOW": 0.3,
+        "NEG_NUM": 16,
+        "POS_NUM": 16,
+        "TOTAL_NUM": 64,
+        "EXEMPLAR_SIZE": 127,
+        "SEARCH_SIZE": 255,
+        "BASE_SIZE": 8,
+        "OUTPUT_SIZE": 25,
+        "RESUME": "",
+        "PRETRAINED": "",
+        "LOG_DIR": "./logs",
+        "SNAPSHOT_DIR": "./snapshot",
+        "EPOCH": 20,
+        "START_EPOCH": 0,
+        "BATCH_SIZE": 28,
+        "NUM_WORKERS": 1,
+        "MOMENTUM": 0.9,
+        "WEIGHT_DECAY": 0.0001,
+        "CLS_WEIGHT": 1.0,
+        "LOC_WEIGHT": 1.2,
+        "MASK_WEIGHT": 1,
+        "PRINT_FREQ": 20,
+        "LOG_GRADS": false,
+        "GRAD_CLIP": 10.0,
+        "BASE_LR": 0.005,
+        "LR": {
+            "TYPE": "log",
+            "KWARGS": {
+                "start_lr": 0.005,
+                "end_lr": 0.0005
+            }
+        },
+        "LR_WARMUP": {
+            "WARMUP": true,
+            "TYPE": "step",
+            "EPOCH": 5,
+            "KWARGS": {
+                "start_lr": 0.001,
+                "end_lr": 0.005,
+                "step": 1
+            }
+        }
+    },
+    "DATASET": {
+        "TEMPLATE": {
+            "SHIFT": 4,
+            "SCALE": 0.05,
+            "BLUR": 0.0,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "SEARCH": {
+            "SHIFT": 64,
+            "SCALE": 0.18,
+            "BLUR": 0.2,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "NEG": 0.2,
+        "GRAY": 0.0,
+        "NAMES": [
+            "VID",
+            "YOUTUBEBB",
+            "COCO",
+            "DET"
+        ],
+        "VID": {
+            "ROOT": "training_dataset/vid/crop511",
+            "ANNO": "training_dataset/vid/train.json",
+            "FRAME_RANGE": 100,
+            "NUM_USE": 100000
+        },
+        "YOUTUBEBB": {
+            "ROOT": "training_dataset/yt_bb/crop511",
+            "ANNO": "training_dataset/yt_bb/train.json",
+            "FRAME_RANGE": 3,
+            "NUM_USE": -1
+        },
+        "COCO": {
+            "ROOT": "training_dataset/coco/crop511",
+            "ANNO": "training_dataset/coco/train2017.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "DET": {
+            "ROOT": "training_dataset/det/crop511",
+            "ANNO": "training_dataset/det/train.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "VIDEOS_PER_EPOCH": 600000
+    },
+    "BACKBONE": {
+        "TYPE": "resnet50",
+        "KWARGS": {
+            "used_layers": [
+                2,
+                3,
+                4
+            ]
+        },
+        "PRETRAINED": "pretrained_models/resnet50.model",
+        "TRAIN_LAYERS": [
+            "layer2",
+            "layer3",
+            "layer4"
+        ],
+        "LAYERS_LR": 0.1,
+        "TRAIN_EPOCH": 10
+    },
+    "ADJUST": {
+        "ADJUST": true,
+        "KWARGS": {
+            "in_channels": [
+                512,
+                1024,
+                2048
+            ],
+            "out_channels": [
+                256,
+                256,
+                256
+            ]
+        },
+        "TYPE": "AdjustAllLayer"
+    },
+    "RPN": {
+        "TYPE": "MultiRPN",
+        "KWARGS": {
+            "anchor_num": 5,
+            "in_channels": [
+                256,
+                256,
+                256
+            ],
+            "weighted": true
+        }
+    },
+    "MASK": {
+        "MASK": false,
+        "TYPE": "MaskCorr",
+        "KWARGS": {}
+    },
+    "REFINE": {
+        "REFINE": false,
+        "TYPE": "Refine"
+    },
+    "ANCHOR": {
+        "STRIDE": 8,
+        "RATIOS": [
+            0.33,
+            0.5,
+            1,
+            2,
+            3
+        ],
+        "SCALES": [
+            8
+        ],
+        "ANCHOR_NUM": 5
+    },
+    "TRACK": {
+        "TYPE": "SiamRPNTracker",
+        "PENALTY_K": 0.04,
+        "WINDOW_INFLUENCE": 0.44,
+        "LR": 0.33,
+        "EXEMPLAR_SIZE": 127,
+        "INSTANCE_SIZE": 255,
+        "BASE_SIZE": 8,
+        "CONTEXT_AMOUNT": 0.5,
+        "LOST_INSTANCE_SIZE": 831,
+        "CONFIDENCE_LOW": 0.85,
+        "CONFIDENCE_HIGH": 0.998,
+        "MASK_THERSHOLD": 0.3,
+        "MASK_OUTPUT_SIZE": 127
+    }
+}
+[2020-01-20 09:35:29,096-rk0-model_load.py# 48] load pretrained model from /home/luo/Downloads/pysot-master/tools/../pretrained_models/resnet50.model
+[2020-01-20 09:35:30,827-rk0-model_load.py# 42] remove prefix 'module.'
+[2020-01-20 09:35:30,828-rk0-model_load.py# 33] used keys:265
+[2020-01-20 09:35:30,834-rk0-train.py# 58] build train dataset
+[2020-01-20 09:35:30,835-rk0-dataset.py# 39] loading VID
+[2020-01-20 09:36:00,048-rk0-train.py#271] Version Information: 
+commit : 
+  log  : 
+
+[2020-01-20 09:36:00,049-rk0-train.py#272] config 
+{
+    "META_ARC": "siamrpn_r50_l234_dwxcorr",
+    "CUDA": true,
+    "TRAIN": {
+        "THR_HIGH": 0.6,
+        "THR_LOW": 0.3,
+        "NEG_NUM": 16,
+        "POS_NUM": 16,
+        "TOTAL_NUM": 64,
+        "EXEMPLAR_SIZE": 127,
+        "SEARCH_SIZE": 255,
+        "BASE_SIZE": 8,
+        "OUTPUT_SIZE": 25,
+        "RESUME": "",
+        "PRETRAINED": "",
+        "LOG_DIR": "./logs",
+        "SNAPSHOT_DIR": "./snapshot",
+        "EPOCH": 20,
+        "START_EPOCH": 0,
+        "BATCH_SIZE": 28,
+        "NUM_WORKERS": 1,
+        "MOMENTUM": 0.9,
+        "WEIGHT_DECAY": 0.0001,
+        "CLS_WEIGHT": 1.0,
+        "LOC_WEIGHT": 1.2,
+        "MASK_WEIGHT": 1,
+        "PRINT_FREQ": 20,
+        "LOG_GRADS": false,
+        "GRAD_CLIP": 10.0,
+        "BASE_LR": 0.005,
+        "LR": {
+            "TYPE": "log",
+            "KWARGS": {
+                "start_lr": 0.005,
+                "end_lr": 0.0005
+            }
+        },
+        "LR_WARMUP": {
+            "WARMUP": true,
+            "TYPE": "step",
+            "EPOCH": 5,
+            "KWARGS": {
+                "start_lr": 0.001,
+                "end_lr": 0.005,
+                "step": 1
+            }
+        }
+    },
+    "DATASET": {
+        "TEMPLATE": {
+            "SHIFT": 4,
+            "SCALE": 0.05,
+            "BLUR": 0.0,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "SEARCH": {
+            "SHIFT": 64,
+            "SCALE": 0.18,
+            "BLUR": 0.2,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "NEG": 0.2,
+        "GRAY": 0.0,
+        "NAMES": [
+            "VID",
+            "YOUTUBEBB",
+            "COCO",
+            "DET"
+        ],
+        "VID": {
+            "ROOT": "training_dataset/vid/crop511",
+            "ANNO": "training_dataset/vid/train.json",
+            "FRAME_RANGE": 100,
+            "NUM_USE": 100000
+        },
+        "YOUTUBEBB": {
+            "ROOT": "training_dataset/yt_bb/crop511",
+            "ANNO": "training_dataset/yt_bb/train.json",
+            "FRAME_RANGE": 3,
+            "NUM_USE": -1
+        },
+        "COCO": {
+            "ROOT": "training_dataset/coco/crop511",
+            "ANNO": "training_dataset/coco/train2017.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "DET": {
+            "ROOT": "training_dataset/det/crop511",
+            "ANNO": "training_dataset/det/train.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "VIDEOS_PER_EPOCH": 600000
+    },
+    "BACKBONE": {
+        "TYPE": "resnet50",
+        "KWARGS": {
+            "used_layers": [
+                2,
+                3,
+                4
+            ]
+        },
+        "PRETRAINED": "pretrained_models/resnet50.model",
+        "TRAIN_LAYERS": [
+            "layer2",
+            "layer3",
+            "layer4"
+        ],
+        "LAYERS_LR": 0.1,
+        "TRAIN_EPOCH": 10
+    },
+    "ADJUST": {
+        "ADJUST": true,
+        "KWARGS": {
+            "in_channels": [
+                512,
+                1024,
+                2048
+            ],
+            "out_channels": [
+                256,
+                256,
+                256
+            ]
+        },
+        "TYPE": "AdjustAllLayer"
+    },
+    "RPN": {
+        "TYPE": "MultiRPN",
+        "KWARGS": {
+            "anchor_num": 5,
+            "in_channels": [
+                256,
+                256,
+                256
+            ],
+            "weighted": true
+        }
+    },
+    "MASK": {
+        "MASK": false,
+        "TYPE": "MaskCorr",
+        "KWARGS": {}
+    },
+    "REFINE": {
+        "REFINE": false,
+        "TYPE": "Refine"
+    },
+    "ANCHOR": {
+        "STRIDE": 8,
+        "RATIOS": [
+            0.33,
+            0.5,
+            1,
+            2,
+            3
+        ],
+        "SCALES": [
+            8
+        ],
+        "ANCHOR_NUM": 5
+    },
+    "TRACK": {
+        "TYPE": "SiamRPNTracker",
+        "PENALTY_K": 0.04,
+        "WINDOW_INFLUENCE": 0.44,
+        "LR": 0.33,
+        "EXEMPLAR_SIZE": 127,
+        "INSTANCE_SIZE": 255,
+        "BASE_SIZE": 8,
+        "CONTEXT_AMOUNT": 0.5,
+        "LOST_INSTANCE_SIZE": 831,
+        "CONFIDENCE_LOW": 0.85,
+        "CONFIDENCE_HIGH": 0.998,
+        "MASK_THERSHOLD": 0.3,
+        "MASK_OUTPUT_SIZE": 127
+    }
+}
+[2020-01-20 09:36:06,949-rk0-model_load.py# 48] load pretrained model from /home/luo/Downloads/pysot-master/tools/../pretrained_models/resnet50.model
+[2020-01-20 09:36:07,321-rk0-model_load.py# 42] remove prefix 'module.'
+[2020-01-20 09:36:07,323-rk0-model_load.py# 33] used keys:265
+[2020-01-20 09:36:07,331-rk0-train.py# 58] build train dataset
+[2020-01-20 09:36:07,332-rk0-dataset.py# 39] loading VID
+[2020-01-20 15:05:01,587-rk0-train.py#271] Version Information: 
+commit : 
+  log  : 
+
+[2020-01-20 15:05:01,588-rk0-train.py#272] config 
+{
+    "META_ARC": "siamrpn_r50_l234_dwxcorr",
+    "CUDA": true,
+    "TRAIN": {
+        "THR_HIGH": 0.6,
+        "THR_LOW": 0.3,
+        "NEG_NUM": 16,
+        "POS_NUM": 16,
+        "TOTAL_NUM": 64,
+        "EXEMPLAR_SIZE": 127,
+        "SEARCH_SIZE": 255,
+        "BASE_SIZE": 8,
+        "OUTPUT_SIZE": 25,
+        "RESUME": "",
+        "PRETRAINED": "",
+        "LOG_DIR": "./logs",
+        "SNAPSHOT_DIR": "./snapshot",
+        "EPOCH": 20,
+        "START_EPOCH": 0,
+        "BATCH_SIZE": 28,
+        "NUM_WORKERS": 1,
+        "MOMENTUM": 0.9,
+        "WEIGHT_DECAY": 0.0001,
+        "CLS_WEIGHT": 1.0,
+        "LOC_WEIGHT": 1.2,
+        "MASK_WEIGHT": 1,
+        "PRINT_FREQ": 20,
+        "LOG_GRADS": false,
+        "GRAD_CLIP": 10.0,
+        "BASE_LR": 0.005,
+        "LR": {
+            "TYPE": "log",
+            "KWARGS": {
+                "start_lr": 0.005,
+                "end_lr": 0.0005
+            }
+        },
+        "LR_WARMUP": {
+            "WARMUP": true,
+            "TYPE": "step",
+            "EPOCH": 5,
+            "KWARGS": {
+                "start_lr": 0.001,
+                "end_lr": 0.005,
+                "step": 1
+            }
+        }
+    },
+    "DATASET": {
+        "TEMPLATE": {
+            "SHIFT": 4,
+            "SCALE": 0.05,
+            "BLUR": 0.0,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "SEARCH": {
+            "SHIFT": 64,
+            "SCALE": 0.18,
+            "BLUR": 0.2,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "NEG": 0.2,
+        "GRAY": 0.0,
+        "NAMES": [
+            "VID",
+            "YOUTUBEBB",
+            "COCO",
+            "DET"
+        ],
+        "VID": {
+            "ROOT": "training_dataset/vid/crop511",
+            "ANNO": "training_dataset/vid/train.json",
+            "FRAME_RANGE": 100,
+            "NUM_USE": 100000
+        },
+        "YOUTUBEBB": {
+            "ROOT": "training_dataset/yt_bb/crop511",
+            "ANNO": "training_dataset/yt_bb/train.json",
+            "FRAME_RANGE": 3,
+            "NUM_USE": -1
+        },
+        "COCO": {
+            "ROOT": "training_dataset/coco/crop511",
+            "ANNO": "training_dataset/coco/train2017.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "DET": {
+            "ROOT": "training_dataset/det/crop511",
+            "ANNO": "training_dataset/det/train.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "VIDEOS_PER_EPOCH": 600000
+    },
+    "BACKBONE": {
+        "TYPE": "resnet50",
+        "KWARGS": {
+            "used_layers": [
+                2,
+                3,
+                4
+            ]
+        },
+        "PRETRAINED": "pretrained_models/resnet50.model",
+        "TRAIN_LAYERS": [
+            "layer2",
+            "layer3",
+            "layer4"
+        ],
+        "LAYERS_LR": 0.1,
+        "TRAIN_EPOCH": 10
+    },
+    "ADJUST": {
+        "ADJUST": true,
+        "KWARGS": {
+            "in_channels": [
+                512,
+                1024,
+                2048
+            ],
+            "out_channels": [
+                256,
+                256,
+                256
+            ]
+        },
+        "TYPE": "AdjustAllLayer"
+    },
+    "RPN": {
+        "TYPE": "MultiRPN",
+        "KWARGS": {
+            "anchor_num": 5,
+            "in_channels": [
+                256,
+                256,
+                256
+            ],
+            "weighted": true
+        }
+    },
+    "MASK": {
+        "MASK": false,
+        "TYPE": "MaskCorr",
+        "KWARGS": {}
+    },
+    "REFINE": {
+        "REFINE": false,
+        "TYPE": "Refine"
+    },
+    "ANCHOR": {
+        "STRIDE": 8,
+        "RATIOS": [
+            0.33,
+            0.5,
+            1,
+            2,
+            3
+        ],
+        "SCALES": [
+            8
+        ],
+        "ANCHOR_NUM": 5
+    },
+    "TRACK": {
+        "TYPE": "SiamRPNTracker",
+        "PENALTY_K": 0.04,
+        "WINDOW_INFLUENCE": 0.44,
+        "LR": 0.33,
+        "EXEMPLAR_SIZE": 127,
+        "INSTANCE_SIZE": 255,
+        "BASE_SIZE": 8,
+        "CONTEXT_AMOUNT": 0.5,
+        "LOST_INSTANCE_SIZE": 831,
+        "CONFIDENCE_LOW": 0.85,
+        "CONFIDENCE_HIGH": 0.998,
+        "MASK_THERSHOLD": 0.3,
+        "MASK_OUTPUT_SIZE": 127
+    }
+}
+[2020-01-20 15:05:13,175-rk0-model_load.py# 48] load pretrained model from /home/luo/Downloads/pysot-master/tools/../pretrained_models/resnet50.model
+[2020-01-20 15:05:18,118-rk0-model_load.py# 42] remove prefix 'module.'
+[2020-01-20 15:05:18,120-rk0-model_load.py# 33] used keys:265
+[2020-01-20 15:05:18,149-rk0-train.py# 58] build train dataset
+[2020-01-20 15:05:18,149-rk0-dataset.py# 39] loading VID
+[2020-01-20 16:30:45,623-rk0-train.py#271] Version Information: 
+commit : 
+  log  : 
+
+[2020-01-20 16:30:45,624-rk0-train.py#272] config 
+{
+    "META_ARC": "siamrpn_r50_l234_dwxcorr",
+    "CUDA": true,
+    "TRAIN": {
+        "THR_HIGH": 0.6,
+        "THR_LOW": 0.3,
+        "NEG_NUM": 16,
+        "POS_NUM": 16,
+        "TOTAL_NUM": 64,
+        "EXEMPLAR_SIZE": 127,
+        "SEARCH_SIZE": 255,
+        "BASE_SIZE": 8,
+        "OUTPUT_SIZE": 25,
+        "RESUME": "",
+        "PRETRAINED": "",
+        "LOG_DIR": "./logs",
+        "SNAPSHOT_DIR": "./snapshot",
+        "EPOCH": 20,
+        "START_EPOCH": 0,
+        "BATCH_SIZE": 28,
+        "NUM_WORKERS": 1,
+        "MOMENTUM": 0.9,
+        "WEIGHT_DECAY": 0.0001,
+        "CLS_WEIGHT": 1.0,
+        "LOC_WEIGHT": 1.2,
+        "MASK_WEIGHT": 1,
+        "PRINT_FREQ": 20,
+        "LOG_GRADS": false,
+        "GRAD_CLIP": 10.0,
+        "BASE_LR": 0.005,
+        "LR": {
+            "TYPE": "log",
+            "KWARGS": {
+                "start_lr": 0.005,
+                "end_lr": 0.0005
+            }
+        },
+        "LR_WARMUP": {
+            "WARMUP": true,
+            "TYPE": "step",
+            "EPOCH": 5,
+            "KWARGS": {
+                "start_lr": 0.001,
+                "end_lr": 0.005,
+                "step": 1
+            }
+        }
+    },
+    "DATASET": {
+        "TEMPLATE": {
+            "SHIFT": 4,
+            "SCALE": 0.05,
+            "BLUR": 0.0,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "SEARCH": {
+            "SHIFT": 64,
+            "SCALE": 0.18,
+            "BLUR": 0.2,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "NEG": 0.2,
+        "GRAY": 0.0,
+        "NAMES": [
+            "VID",
+            "YOUTUBEBB",
+            "COCO",
+            "DET"
+        ],
+        "VID": {
+            "ROOT": "training_dataset/vid/crop511",
+            "ANNO": "training_dataset/vid/train.json",
+            "FRAME_RANGE": 100,
+            "NUM_USE": 100000
+        },
+        "YOUTUBEBB": {
+            "ROOT": "training_dataset/yt_bb/crop511",
+            "ANNO": "training_dataset/yt_bb/train.json",
+            "FRAME_RANGE": 3,
+            "NUM_USE": -1
+        },
+        "COCO": {
+            "ROOT": "training_dataset/coco/crop511",
+            "ANNO": "training_dataset/coco/train2017.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "DET": {
+            "ROOT": "training_dataset/det/crop511",
+            "ANNO": "training_dataset/det/train.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "VIDEOS_PER_EPOCH": 600000
+    },
+    "BACKBONE": {
+        "TYPE": "resnet50",
+        "KWARGS": {
+            "used_layers": [
+                2,
+                3,
+                4
+            ]
+        },
+        "PRETRAINED": "pretrained_models/resnet50.model",
+        "TRAIN_LAYERS": [
+            "layer2",
+            "layer3",
+            "layer4"
+        ],
+        "LAYERS_LR": 0.1,
+        "TRAIN_EPOCH": 10
+    },
+    "ADJUST": {
+        "ADJUST": true,
+        "KWARGS": {
+            "in_channels": [
+                512,
+                1024,
+                2048
+            ],
+            "out_channels": [
+                256,
+                256,
+                256
+            ]
+        },
+        "TYPE": "AdjustAllLayer"
+    },
+    "RPN": {
+        "TYPE": "MultiRPN",
+        "KWARGS": {
+            "anchor_num": 5,
+            "in_channels": [
+                256,
+                256,
+                256
+            ],
+            "weighted": true
+        }
+    },
+    "MASK": {
+        "MASK": false,
+        "TYPE": "MaskCorr",
+        "KWARGS": {}
+    },
+    "REFINE": {
+        "REFINE": false,
+        "TYPE": "Refine"
+    },
+    "ANCHOR": {
+        "STRIDE": 8,
+        "RATIOS": [
+            0.33,
+            0.5,
+            1,
+            2,
+            3
+        ],
+        "SCALES": [
+            8
+        ],
+        "ANCHOR_NUM": 5
+    },
+    "TRACK": {
+        "TYPE": "SiamRPNTracker",
+        "PENALTY_K": 0.04,
+        "WINDOW_INFLUENCE": 0.44,
+        "LR": 0.33,
+        "EXEMPLAR_SIZE": 127,
+        "INSTANCE_SIZE": 255,
+        "BASE_SIZE": 8,
+        "CONTEXT_AMOUNT": 0.5,
+        "LOST_INSTANCE_SIZE": 831,
+        "CONFIDENCE_LOW": 0.85,
+        "CONFIDENCE_HIGH": 0.998,
+        "MASK_THERSHOLD": 0.3,
+        "MASK_OUTPUT_SIZE": 127
+    }
+}
+[2020-01-20 16:30:55,339-rk0-model_load.py# 48] load pretrained model from /home/luo/Downloads/pysot-master/tools/../pretrained_models/resnet50.model
+[2020-01-20 16:30:57,448-rk0-model_load.py# 42] remove prefix 'module.'
+[2020-01-20 16:30:57,449-rk0-model_load.py# 33] used keys:265
+[2020-01-20 16:30:57,477-rk0-train.py# 58] build train dataset
+[2020-01-20 16:30:57,478-rk0-dataset.py# 39] loading VID
+[2020-01-20 16:31:04,146-rk0-dataset.py# 64] VID loaded
+[2020-01-20 16:31:04,151-rk0-dataset.py# 93] VID start-index 0 select [100000/3862] path_format {}.{}.{}.jpg
+[2020-01-20 16:31:04,152-rk0-dataset.py# 39] loading YOUTUBEBB
+[2020-01-20 18:06:58,059-rk0-train.py#271] Version Information: 
+commit : 
+  log  : 
+
+[2020-01-20 18:06:58,059-rk0-train.py#272] config 
+{
+    "META_ARC": "siamrpn_r50_l234_dwxcorr",
+    "CUDA": true,
+    "TRAIN": {
+        "THR_HIGH": 0.6,
+        "THR_LOW": 0.3,
+        "NEG_NUM": 16,
+        "POS_NUM": 16,
+        "TOTAL_NUM": 64,
+        "EXEMPLAR_SIZE": 127,
+        "SEARCH_SIZE": 255,
+        "BASE_SIZE": 8,
+        "OUTPUT_SIZE": 25,
+        "RESUME": "",
+        "PRETRAINED": "",
+        "LOG_DIR": "./logs",
+        "SNAPSHOT_DIR": "./snapshot",
+        "EPOCH": 20,
+        "START_EPOCH": 0,
+        "BATCH_SIZE": 28,
+        "NUM_WORKERS": 1,
+        "MOMENTUM": 0.9,
+        "WEIGHT_DECAY": 0.0001,
+        "CLS_WEIGHT": 1.0,
+        "LOC_WEIGHT": 1.2,
+        "MASK_WEIGHT": 1,
+        "PRINT_FREQ": 20,
+        "LOG_GRADS": false,
+        "GRAD_CLIP": 10.0,
+        "BASE_LR": 0.005,
+        "LR": {
+            "TYPE": "log",
+            "KWARGS": {
+                "start_lr": 0.005,
+                "end_lr": 0.0005
+            }
+        },
+        "LR_WARMUP": {
+            "WARMUP": true,
+            "TYPE": "step",
+            "EPOCH": 5,
+            "KWARGS": {
+                "start_lr": 0.001,
+                "end_lr": 0.005,
+                "step": 1
+            }
+        }
+    },
+    "DATASET": {
+        "TEMPLATE": {
+            "SHIFT": 4,
+            "SCALE": 0.05,
+            "BLUR": 0.0,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "SEARCH": {
+            "SHIFT": 64,
+            "SCALE": 0.18,
+            "BLUR": 0.2,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "NEG": 0.2,
+        "GRAY": 0.0,
+        "NAMES": [
+            "VID",
+            "YOUTUBEBB",
+            "COCO",
+            "DET"
+        ],
+        "VID": {
+            "ROOT": "training_dataset/vid/crop511",
+            "ANNO": "training_dataset/vid/train.json",
+            "FRAME_RANGE": 100,
+            "NUM_USE": 100000
+        },
+        "YOUTUBEBB": {
+            "ROOT": "training_dataset/yt_bb/crop511",
+            "ANNO": "training_dataset/yt_bb/train.json",
+            "FRAME_RANGE": 3,
+            "NUM_USE": -1
+        },
+        "COCO": {
+            "ROOT": "training_dataset/coco/crop511",
+            "ANNO": "training_dataset/coco/train2017.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "DET": {
+            "ROOT": "training_dataset/det/crop511",
+            "ANNO": "training_dataset/det/train.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "VIDEOS_PER_EPOCH": 600000
+    },
+    "BACKBONE": {
+        "TYPE": "resnet50",
+        "KWARGS": {
+            "used_layers": [
+                2,
+                3,
+                4
+            ]
+        },
+        "PRETRAINED": "pretrained_models/resnet50.model",
+        "TRAIN_LAYERS": [
+            "layer2",
+            "layer3",
+            "layer4"
+        ],
+        "LAYERS_LR": 0.1,
+        "TRAIN_EPOCH": 10
+    },
+    "ADJUST": {
+        "ADJUST": true,
+        "KWARGS": {
+            "in_channels": [
+                512,
+                1024,
+                2048
+            ],
+            "out_channels": [
+                256,
+                256,
+                256
+            ]
+        },
+        "TYPE": "AdjustAllLayer"
+    },
+    "RPN": {
+        "TYPE": "MultiRPN",
+        "KWARGS": {
+            "anchor_num": 5,
+            "in_channels": [
+                256,
+                256,
+                256
+            ],
+            "weighted": true
+        }
+    },
+    "MASK": {
+        "MASK": false,
+        "TYPE": "MaskCorr",
+        "KWARGS": {}
+    },
+    "REFINE": {
+        "REFINE": false,
+        "TYPE": "Refine"
+    },
+    "ANCHOR": {
+        "STRIDE": 8,
+        "RATIOS": [
+            0.33,
+            0.5,
+            1,
+            2,
+            3
+        ],
+        "SCALES": [
+            8
+        ],
+        "ANCHOR_NUM": 5
+    },
+    "TRACK": {
+        "TYPE": "SiamRPNTracker",
+        "PENALTY_K": 0.04,
+        "WINDOW_INFLUENCE": 0.44,
+        "LR": 0.33,
+        "EXEMPLAR_SIZE": 127,
+        "INSTANCE_SIZE": 255,
+        "BASE_SIZE": 8,
+        "CONTEXT_AMOUNT": 0.5,
+        "LOST_INSTANCE_SIZE": 831,
+        "CONFIDENCE_LOW": 0.85,
+        "CONFIDENCE_HIGH": 0.998,
+        "MASK_THERSHOLD": 0.3,
+        "MASK_OUTPUT_SIZE": 127
+    }
+}
+[2020-01-20 18:07:07,636-rk0-model_load.py# 48] load pretrained model from /home/luo/Downloads/pysot-master/tools/../pretrained_models/resnet50.model
+[2020-01-20 18:07:08,155-rk0-model_load.py# 42] remove prefix 'module.'
+[2020-01-20 18:07:08,156-rk0-model_load.py# 33] used keys:265
+[2020-01-20 18:07:08,324-rk0-train.py# 58] build train dataset
+[2020-01-20 18:07:08,325-rk0-dataset.py# 39] loading VID
+[2020-01-20 18:07:16,417-rk0-dataset.py# 64] VID loaded
+[2020-01-20 18:07:16,422-rk0-dataset.py# 93] VID start-index 0 select [100000/3862] path_format {}.{}.{}.jpg
+[2020-01-20 18:07:16,423-rk0-dataset.py# 39] loading YOUTUBEBB
+[2020-01-20 18:10:53,282-rk0-train.py#271] Version Information: 
+commit : 
+  log  : 
+
+[2020-01-20 18:10:53,283-rk0-train.py#272] config 
+{
+    "META_ARC": "siamrpn_r50_l234_dwxcorr",
+    "CUDA": true,
+    "TRAIN": {
+        "THR_HIGH": 0.6,
+        "THR_LOW": 0.3,
+        "NEG_NUM": 16,
+        "POS_NUM": 16,
+        "TOTAL_NUM": 64,
+        "EXEMPLAR_SIZE": 127,
+        "SEARCH_SIZE": 255,
+        "BASE_SIZE": 8,
+        "OUTPUT_SIZE": 25,
+        "RESUME": "",
+        "PRETRAINED": "",
+        "LOG_DIR": "./logs",
+        "SNAPSHOT_DIR": "./snapshot",
+        "EPOCH": 20,
+        "START_EPOCH": 0,
+        "BATCH_SIZE": 28,
+        "NUM_WORKERS": 1,
+        "MOMENTUM": 0.9,
+        "WEIGHT_DECAY": 0.0001,
+        "CLS_WEIGHT": 1.0,
+        "LOC_WEIGHT": 1.2,
+        "MASK_WEIGHT": 1,
+        "PRINT_FREQ": 20,
+        "LOG_GRADS": false,
+        "GRAD_CLIP": 10.0,
+        "BASE_LR": 0.005,
+        "LR": {
+            "TYPE": "log",
+            "KWARGS": {
+                "start_lr": 0.005,
+                "end_lr": 0.0005
+            }
+        },
+        "LR_WARMUP": {
+            "WARMUP": true,
+            "TYPE": "step",
+            "EPOCH": 5,
+            "KWARGS": {
+                "start_lr": 0.001,
+                "end_lr": 0.005,
+                "step": 1
+            }
+        }
+    },
+    "DATASET": {
+        "TEMPLATE": {
+            "SHIFT": 4,
+            "SCALE": 0.05,
+            "BLUR": 0.0,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "SEARCH": {
+            "SHIFT": 64,
+            "SCALE": 0.18,
+            "BLUR": 0.2,
+            "FLIP": 0.0,
+            "COLOR": 1.0
+        },
+        "NEG": 0.2,
+        "GRAY": 0.0,
+        "NAMES": [
+            "VID",
+            "YOUTUBEBB",
+            "COCO",
+            "DET"
+        ],
+        "VID": {
+            "ROOT": "training_dataset/vid/crop511",
+            "ANNO": "training_dataset/vid/train.json",
+            "FRAME_RANGE": 100,
+            "NUM_USE": 100000
+        },
+        "YOUTUBEBB": {
+            "ROOT": "training_dataset/yt_bb/crop511",
+            "ANNO": "training_dataset/yt_bb/train.json",
+            "FRAME_RANGE": 3,
+            "NUM_USE": -1
+        },
+        "COCO": {
+            "ROOT": "training_dataset/coco/crop511",
+            "ANNO": "training_dataset/coco/train2017.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "DET": {
+            "ROOT": "training_dataset/det/crop511",
+            "ANNO": "training_dataset/det/train.json",
+            "FRAME_RANGE": 1,
+            "NUM_USE": -1
+        },
+        "VIDEOS_PER_EPOCH": 600000
+    },
+    "BACKBONE": {
+        "TYPE": "resnet50",
+        "KWARGS": {
+            "used_layers": [
+                2,
+                3,
+                4
+            ]
+        },
+        "PRETRAINED": "pretrained_models/resnet50.model",
+        "TRAIN_LAYERS": [
+            "layer2",
+            "layer3",
+            "layer4"
+        ],
+        "LAYERS_LR": 0.1,
+        "TRAIN_EPOCH": 10
+    },
+    "ADJUST": {
+        "ADJUST": true,
+        "KWARGS": {
+            "in_channels": [
+                512,
+                1024,
+                2048
+            ],
+            "out_channels": [
+                256,
+                256,
+                256
+            ]
+        },
+        "TYPE": "AdjustAllLayer"
+    },
+    "RPN": {
+        "TYPE": "MultiRPN",
+        "KWARGS": {
+            "anchor_num": 5,
+            "in_channels": [
+                256,
+                256,
+                256
+            ],
+            "weighted": true
+        }
+    },
+    "MASK": {
+        "MASK": false,
+        "TYPE": "MaskCorr",
+        "KWARGS": {}
+    },
+    "REFINE": {
+        "REFINE": false,
+        "TYPE": "Refine"
+    },
+    "ANCHOR": {
+        "STRIDE": 8,
+        "RATIOS": [
+            0.33,
+            0.5,
+            1,
+            2,
+            3
+        ],
+        "SCALES": [
+            8
+        ],
+        "ANCHOR_NUM": 5
+    },
+    "TRACK": {
+        "TYPE": "SiamRPNTracker",
+        "PENALTY_K": 0.04,
+        "WINDOW_INFLUENCE": 0.44,
+        "LR": 0.33,
+        "EXEMPLAR_SIZE": 127,
+        "INSTANCE_SIZE": 255,
+        "BASE_SIZE": 8,
+        "CONTEXT_AMOUNT": 0.5,
+        "LOST_INSTANCE_SIZE": 831,
+        "CONFIDENCE_LOW": 0.85,
+        "CONFIDENCE_HIGH": 0.998,
+        "MASK_THERSHOLD": 0.3,
+        "MASK_OUTPUT_SIZE": 127
+    }
+}
+[2020-01-20 18:10:59,339-rk0-model_load.py# 48] load pretrained model from /home/luo/Downloads/pysot-master/tools/../pretrained_models/resnet50.model
+[2020-01-20 18:10:59,952-rk0-model_load.py# 42] remove prefix 'module.'
+[2020-01-20 18:10:59,954-rk0-model_load.py# 33] used keys:265
+[2020-01-20 18:10:59,984-rk0-train.py# 58] build train dataset
+[2020-01-20 18:10:59,987-rk0-dataset.py# 39] loading VID
+[2020-01-20 18:11:06,472-rk0-dataset.py# 64] VID loaded
+[2020-01-20 18:11:06,477-rk0-dataset.py# 93] VID start-index 0 select [100000/3862] path_format {}.{}.{}.jpg
+[2020-01-20 18:11:06,478-rk0-dataset.py# 39] loading YOUTUBEBB
