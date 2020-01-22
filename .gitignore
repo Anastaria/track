@@ -1,0 +1,7 @@
+*.zip
+/testing_dataset
+/training_dataset
+/demo
+/experiments/siamrpn_r50_l234_dwxcorr/model.pth
+/experiments/siamrpn_r50_l234_dwxcorr_8gpu/pretrained_models
+/experiments/siamrpn_r50_l3/model.pth
