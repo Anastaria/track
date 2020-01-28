@@ -84,10 +84,9 @@ def main():
                 init_rect = cv2.selectROI(video_name, frame, False, False)#choose a rectangle as ROI
             except:
                 exit()
-            tracker.init(frame, init_rect)
+            tracker.init(frame, init_rect)#initiating the tracker
             first_frame = False # choose the ROI on the first frame and then track it on the following frames 
         else:
-            #import pdb;pdb.set_trace()
             outputs = tracker.track(frame)#outputs:bbox/polygon+best_score
             if 'polygon' in outputs:
                 polygon = np.array(outputs['polygon']).astype(np.int32)

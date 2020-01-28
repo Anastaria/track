@@ -219,7 +219,7 @@ def train(train_loader, model, optimizer, lr_scheduler, tb_writer):
                 log_grads(model.module, tb_writer, tb_idx)
 
             # clip gradient
-            clip_grad_norm_(model.parameters(), cfg.TRAIN.GRAD_CLIP)
+            clip_grad_norm_(model.parameters(), cfg.TRAIN.GRAD_CLIP)#prevent gradient explode
             optimizer.step()
 
         batch_time = time.time() - end
