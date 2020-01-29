@@ -23,8 +23,8 @@ class UPChannelRPN(RPN):
     def __init__(self, anchor_num=5, feature_in=256):
         super(UPChannelRPN, self).__init__()
 
-        cls_output = 2 * anchor_num
-        loc_output = 4 * anchor_num
+        cls_output = 2 * anchor_num#prob of object/non_object, binary classification(could also be logistic)
+        loc_output = 4 * anchor_num#corrdinates
 
         self.template_cls_conv = nn.Conv2d(feature_in, 
                 feature_in * cls_output, kernel_size=3)
