@@ -13,13 +13,13 @@ def get_cls_loss(pred, label, select):
     if len(select.size()) == 0 or \
             select.size() == torch.Size([0]):
         return 0
-    pred = torch.index_select(pred, 0, select)
+    pred = torch.index_select(pred, 0, select)#get selected rows of pred
     label = torch.index_select(label, 0, select)
-    return F.nll_loss(pred, label)
+    return F.nll_loss(pred, label)#multi-classification cross entropy loss, negative_log_likelihood_loss
 
 
 def select_cross_entropy_loss(pred, label):
-    pred = pred.view(-1, 2)
+    pred = pred.view(-1, 2)#reshape
     label = label.view(-1)
     pos = label.data.eq(1).nonzero().squeeze().cuda()
     neg = label.data.eq(0).nonzero().squeeze().cuda()

@@ -70,12 +70,12 @@ class ModelBuilder(nn.Module):
     def log_softmax(self, cls):
         b, a2, h, w = cls.size()
         cls = cls.view(b, 2, a2//2, h, w)
-        cls = cls.permute(0, 2, 3, 4, 1).contiguous()
+        cls = cls.permute(0, 2, 3, 4, 1).contiguous()#rank
         cls = F.log_softmax(cls, dim=4)
         return cls
 
     def forward(self, data):
-        """ only used in training
+        """ only used in training ??in demo and test, always need to create model
         """
         template = data['template'].cuda()
         search = data['search'].cuda()
